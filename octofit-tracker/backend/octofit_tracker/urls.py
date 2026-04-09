@@ -27,13 +27,23 @@ if codespace_name:
 else:
     base_url = "http://localhost:8000"
 
-# Placeholder API root
+
+# Placeholder API root with codespace-aware URL
 def api_root(request):
-    return JsonResponse({"message": "OctoFit API root"})
+    return JsonResponse({
+        "message": "OctoFit API root",
+        "api_base_url": base_url + "/api/"
+    })
+
+# Root redirect to API
+from django.shortcuts import redirect
+def root_redirect(request):
+    return redirect('api-root')
 
 router = routers.DefaultRouter()
 
 urlpatterns = [
+    path('', root_redirect),
     path('admin/', admin.site.urls),
     path('api/', api_root, name='api-root'),
     path('api/', include(router.urls)),
